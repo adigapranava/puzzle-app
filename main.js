@@ -1,4 +1,3 @@
-var PROBLEM
 var STARTED = false;
 var PAUSED = false;
 var MOVES;
@@ -84,8 +83,13 @@ let PUZZLE = [{
     "COLUMNS": 9,
     "ROWS": 5
 }]
+var INDEX = Math.floor(Math.random() * PUZZLE.length)
+var PROBLEM = PUZZLE[INDEX];
 
+
+// reinitilize the Global variables and take an image and make puzzle
 function run() {
+    //its like new game so re-initialize the variables and reset the timers;
     STARTED = false;
     PAUSED = false;
     MOVES = 0;
@@ -93,28 +97,38 @@ function run() {
     document.getElementById("beforeStart").style.display = "flex";
     document.getElementById("afterStart").style.display = "none";
     document.getElementById("scoreboard").style.display = "none";
+    document.getElementById("main").style.filter = "";
 
-    PROBLEM = PUZZLE[Math.floor(Math.random() * PUZZLE.length)];
+    INDEX = (INDEX + 1) % PUZZLE.length;
+    PROBLEM = PUZZLE[INDEX];
+
+    // setting the puzzle area
     document.getElementById("main").style.width = PROBLEM["SIDE"] * PROBLEM["COLUMNS"] + "px";
     document.getElementById("main").style.height = PROBLEM["SIDE"] * +PROBLEM["ROWS"] + "px";
-    // console.log(PROBLEM);
 
+    //setting css variable about bg url bg size and size of each block;
     document.documentElement.style.setProperty("--bgurl", "url(" + PROBLEM["IMG_URL"] + ")");
     document.documentElement.style.setProperty("--bgsize", PROBLEM["BG_SIZE"] + "px");
     document.documentElement.style.setProperty("--side", PROBLEM["SIDE"] + "px");
 
+
+    // creating the puzzle blocks
     for (let i = 0; i < PROBLEM["ROWS"]; i++) {
+
+        // creating row wise divs and setting ids and classes
         let row = document.createElement("DIV");
         row.classList.add("rows");
         row.setAttribute('id', "img" + i);
+
         for (let j = 0; j < PROBLEM["COLUMNS"]; j++) {
 
-            //dynamically creating element
+            //dynamically creating element setting ids and classes
             let column = document.createElement("DIV");
             column.setAttribute('id', "img" + i + "-" + j);
             column.classList.add("imgs");
             column.classList.add("img" + i + "-" + j);
 
+            // adding drag and drop feature to each block
             column.onmousedown = function() {
                 grabber(event);
             };
@@ -136,54 +150,73 @@ function run() {
 var diffx, diffy, theElement, zindx = 0;
 var curI, curJ;
 
+//this function make drag and drop work only if STARTED or not(PAUSED)
+//it is called whe the block is pressed
+// it calls mover and dropper
 function grabber(event) {
-    // console.log(event);
+    // If not started or paused no drag and drop feature
     if (!STARTED || PAUSED)
         return;
+    // getting the dragging element
     theElement = event.currentTarget;
     var eid = String(theElement.id);
 
-    curJ = parseInt((parseInt(theElement.style.left) + (PROBLEM["SIDE"] / 2)) / PROBLEM["SIDE"]);
-    curI = parseInt((parseInt(theElement.style.top) + (PROBLEM["SIDE"] / 2)) / PROBLEM["SIDE"]);
-    //console.log(curI, curJ);
+    // getting the elements x and y cordinate
     var posX = parseInt(theElement.style.left);
     var posY = parseInt(theElement.style.top);
+
+    // getting its row and column in curI and curJ respectively
+    curJ = parseInt((posX + (PROBLEM["SIDE"] / 2)) / PROBLEM["SIDE"]);
+    curI = parseInt((posY + (PROBLEM["SIDE"] / 2)) / PROBLEM["SIDE"]);
+
     diffx = event.clientX - posX;
     diffy = event.clientY - posY;
     zindx += 1;
     theElement.style.zIndex = zindx;
     theElement.classList.add("highlight");
 
-    document.addEventListener("mousemove", mover, true); //The addEventListener() method attaches an event handler to the specified element.
+    //The addEventListener() method attaches an event handler to the specified element.
+    document.addEventListener("mousemove", mover, true);
     document.addEventListener("mouseup", dropper, true);
     event.stopPropagation();
     event.preventDefault();
 }
 
+// it moves the element in the direction of the cusor
 function mover(event) {
     theElement.style.left = (event.clientX - diffx) + "px";
     theElement.style.top = (event.clientY - diffy) + "px";
 
-    event.stopPropagation(); //The stopPropagation() method allows you to prevent propagation of the current event.
+    //The stopPropagation() method allows you to prevent propagation of the current event.
+    event.stopPropagation();
 }
 
+// this function drops the block in the puzzel area and swaps the block in that block
 function dropper(event) {
-    // console.log(theElement.style.left, theElement.style.top);
-    if (parseInt(theElement.style.left) >= 0 - (PROBLEM["SIDE"] / 2) &&
-        parseInt(theElement.style.left) <= PROBLEM["COLUMNS"] * PROBLEM["SIDE"] &&
+    // condition to check if droping in the puzzle area only.
+    if (
+        parseInt(theElement.style.left) >= 0 - (PROBLEM["SIDE"] / 2) &&
+        parseInt(theElement.style.left) <= (PROBLEM["COLUMNS"] - 1) * PROBLEM["SIDE"] &&
         parseInt(theElement.style.top) >= 0 - (PROBLEM["SIDE"] / 2) &&
-        parseInt(theElement.style.top) <= PROBLEM["ROWS"] * PROBLEM["SIDE"]) {
+        parseInt(theElement.style.top) <= (PROBLEM["ROWS"] - 1) * PROBLEM["SIDE"]
+    ) {
+        // getting i and j value of the puzzle block where you are dropping
         var newJ = parseInt((parseInt(theElement.style.left) + (PROBLEM["SIDE"] / 2)) / PROBLEM["SIDE"]);
         var newI = parseInt((parseInt(theElement.style.top) + (PROBLEM["SIDE"] / 2)) / PROBLEM["SIDE"]);
 
+        // setting the left and top 
         theElement.style.left = newJ * PROBLEM["SIDE"] + "px";
         theElement.style.top = newI * PROBLEM["SIDE"] + "px";
 
+        // getting the block in the droped position
         var theElementTogled = "img" + newI + "-" + newJ;
         theElementTogled = document.getElementById(theElementTogled);
+
+        // changing the position to the draged block
         theElementTogled.style.left = curJ * PROBLEM["SIDE"] + "px";
         theElementTogled.style.top = curI * PROBLEM["SIDE"] + "px";
 
+        // seting new id
         theElement.id = "img" + newI + "-" + newJ;
         theElementTogled.id = "img" + curI + "-" + curJ;
         if (theElement != theElementTogled) {
@@ -204,15 +237,22 @@ function dropper(event) {
 
 
 // shuffel
+// here the game starts
+// timer starts and calls shuffel()
 
-function shuffel() {
+function play(params) {
     STARTED = true;
     startTimer();
     document.getElementById("beforeStart").style.display = "none";
     document.getElementById("afterStart").style.display = "flex";
+    shuffel()
+}
+
+function shuffel() {
+    // logic to assign random position to puzzle block
     var rows = Array.from(Array(PROBLEM["ROWS"]).keys())
     var columns = Array.from(Array(PROBLEM["COLUMNS"]).keys())
-        // console.log(k);
+
     var elearr = []
     for (let index = 0; index < rows.length; index++) {
         for (let j = 0; j < columns.length; j++) {
