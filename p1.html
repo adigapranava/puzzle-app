@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Coda:wght@800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body onload="run()">
+    <div class="uppermain">
+        <div id="main"></div>
+    </div>
+    <div id="beforeStart" class="btns ">
+        <button class="shuffel" onclick="clearNRun()">Refresh</button>
+        <button class="shuffel" onclick="shuffel()">Play</button>
+
+    </div>
+    <div id="afterStart" class="btns ">
+        <button id="pause-play-lable" class="shuffel" onclick="pause()">Pause</button>
+        <button class="check" onclick="check()">Check</button>
+        <button class="shuffel" onclick="askAndSubmit()">Submit</button>
+    </div>
+    <div id="timmer">
+        <p>Timmer</p>
+        <div class="time-div">
+            <h2 id="time">00</h2>
+        </div>
+    </div>
+    <div id="scoreboard" class="transp">
+        <div id="board">
+            <h2>Score Board</h2>
+            <div class="columns">
+                <div class="row stat">
+                    <table>
+                        <tr>
+                            <td>Time Taken: </td>
+                            <td id="timetaken"></td>
+                        </tr>
+                        <tr>
+                            <td>Total Number<br>Of Moves:</td>
+                            <td id="tMoves"></td>
+                        </tr>
+                        <tr>
+                            <td>Accuracy</td>
+                            <td id="accuracy">
+                                <div id="roller">&nbsp;</div>
+                                <div class="transparent-div" id="acc-score">
+                                    &nbsp;
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="row" id="table" style="width: 400px;">
+                </div>
+            </div>
+            <div class="button-div">
+                <button class="shuffel pl" onclick="clearNRun()">Play Again</button>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="main.js"></script>
+
+</html>
