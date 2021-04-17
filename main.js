@@ -1,7 +1,7 @@
 var STARTED = false;
 var PAUSED = false;
 var MOVES;
-var TM;
+var TM = 0;
 var TIMMER;
 let PUZZLE = [{
     //ben10
@@ -81,6 +81,60 @@ let PUZZLE = [{
     "BG_SIZE": 800,
     "SIDE": 90,
     "COLUMNS": 9,
+    "ROWS": 5
+}, {
+    "IMG_URL": "imgs/lionKing.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 100,
+    "COLUMNS": 8,
+    "ROWS": 5
+}, {
+    "IMG_URL": "imgs/lionKing2.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 100,
+    "COLUMNS": 8,
+    "ROWS": 5
+}, {
+    "IMG_URL": "imgs/iceAge.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 100,
+    "COLUMNS": 8,
+    "ROWS": 5
+}, {
+    "IMG_URL": "imgs/jungleBook.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 100,
+    "COLUMNS": 8,
+    "ROWS": 5
+}, {
+    "IMG_URL": "imgs/madagarscar.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 90,
+    "COLUMNS": 9,
+    "ROWS": 5
+}, {
+    "IMG_URL": "imgs/cars.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 100,
+    "COLUMNS": 8,
+    "ROWS": 4
+}, {
+    "IMG_URL": "imgs/shrekTheThird.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 100,
+    "COLUMNS": 8,
+    "ROWS": 5
+}, {
+    "IMG_URL": "imgs/mikyMouse.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 100,
+    "COLUMNS": 8,
+    "ROWS": 5
+}, {
+    "IMG_URL": "imgs/tomAndJerry2.jpg",
+    "BG_SIZE": 800,
+    "SIDE": 100,
+    "COLUMNS": 8,
     "ROWS": 5
 }]
 var INDEX = Math.floor(Math.random() * PUZZLE.length)
@@ -186,7 +240,7 @@ function grabber(event) {
 function mover(event) {
     theElement.style.left = (event.clientX - diffx) + "px";
     theElement.style.top = (event.clientY - diffy) + "px";
-
+    // console.log(theElement.style.top, theElement.style.left);
     //The stopPropagation() method allows you to prevent propagation of the current event.
     event.stopPropagation();
 }
@@ -196,9 +250,9 @@ function dropper(event) {
     // condition to check if droping in the puzzle area only.
     if (
         parseInt(theElement.style.left) >= 0 - (PROBLEM["SIDE"] / 2) &&
-        parseInt(theElement.style.left) <= (PROBLEM["COLUMNS"] - 1) * PROBLEM["SIDE"] &&
+        parseInt(theElement.style.left) <= (PROBLEM["COLUMNS"] - 0.5) * PROBLEM["SIDE"] &&
         parseInt(theElement.style.top) >= 0 - (PROBLEM["SIDE"] / 2) &&
-        parseInt(theElement.style.top) <= (PROBLEM["ROWS"] - 1) * PROBLEM["SIDE"]
+        parseInt(theElement.style.top) < (PROBLEM["ROWS"] - 0.5) * PROBLEM["SIDE"]
     ) {
         // getting i and j value of the puzzle block where you are dropping
         var newJ = parseInt((parseInt(theElement.style.left) + (PROBLEM["SIDE"] / 2)) / PROBLEM["SIDE"]);
